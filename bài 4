@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lịch trình lập lịch</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Lịch trình lập lịch</h2>
+    <table>
+        <tr>
+            <th>Công việc</th>
+            <th>Máy</th>
+            <th>Thời gian gia công</th>
+        </tr>
+        <!-- Đoạn mã HTML sẽ được tạo ra bằng mã JavaScript -->
+    </table>
+
+    <script>
+        // Dữ liệu mẫu về thời gian gia công các công việc trên các máy
+        var processingTimes = [
+            [2, 4, 6],
+            [3, 5, 2],
+            [1, 6, 4]
+            // Thêm dữ liệu thời gian gia công ở đây
+        ];
+
+        // Số lượng công việc
+        var n = processingTimes.length;
+        // Số lượng máy
+        var m = processingTimes[0].length;
+
+        // Tạo bảng lịch trình
+        var table = document.querySelector('table');
+
+        // Duyệt qua từng công việc
+        for (var i = 0; i < n; i++) {
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+           cell1.innerHTML = "D" + (i+1); // Tên công việc
+            // Tìm máy có thời gian gia công ít nhất
+            var minTime = Infinity;
+            var minMachine;
+            for (var j = 0; j < m; j++) {
+                if (processingTimes[i][j] < minTime) {
+                    minTime = processingTimes[i][j];
+                    minMachine = j + 1;
+                }
+            }
+            cell2.innerHTML = "M" + minMachine; // Tên máy
+            cell3.innerHTML = minTime; // Thời gian gia công
+        }
+    </script>
+</body>
+</html>
+

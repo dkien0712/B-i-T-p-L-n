@@ -1,0 +1,186 @@
+7.	<!DOCTYPE html>
+8.	<html lang="en">
+9.	<head>
+10.	    <meta charset="UTF-8">
+11.	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+12.	    <title>Minimum Spanning Tree - Prim's Algorithm</title>
+13.	    <style>
+14.	        body {
+15.	            font-family: Arial, sans-serif;
+16.	            margin: 20px;
+17.	        }
+18.	    </style>
+19.	</head>
+20.	<body>
+21.	    <h2>Tìm cây khung nhỏ nhất bằng thuật toán Prim</h2>
+22.	
+23.	    <div id="output"></div>
+24.	
+25.	    <button id="displayMSTBtn">Hiển thị kết quả</button> <!-- Thêm nút để hiển thị kết quả -->
+26.	
+27.	    <script>
+28.	        class Graph {
+29.	            constructor() {
+30.	                this.vertices = [];
+31.	                this.edges = [];
+32.	            }
+33.	
+34.	            addVertex(vertex) {
+35.	                this.vertices.push(vertex);
+36.	                this.edges[vertex] = [];
+37.	            }
+38.	
+39.	            addEdge(vertex1, vertex2, weight) {
+40.	                this.edges[vertex1].push({ node: vertex2, weight: weight });
+41.	                this.edges[vertex2].push({ node: vertex1, weight: weight });
+42.	            }
+43.	
+44.	            prim(startVertex) {
+45.	                const mst = [];
+46.	                const visited = {};
+47.	                const pq = new PriorityQueue();
+48.	
+49.	                // Khởi tạo tất cả các đỉnh chưa được thăm và độ ưu tiên của chúng là vô cực
+50.	                this.vertices.forEach(vertex => {
+51.	                    visited[vertex] = false;
+52.	                    pq.enqueue(vertex, Infinity);
+53.	                });
+54.	
+55.	                // Đặt độ ưu tiên của đỉnh khởi đầu là 0
+56.	                pq.changePriority(startVertex, 0);
+57.	
+58.	                while (!pq.isEmpty()) {
+59.	                    const currentVertex = pq.dequeue().data;
+60.	                    visited[currentVertex] = true;
+61.	                    mst.push(currentVertex);
+62.	
+63.	                    this.edges[currentVertex].forEach(neighbor => {
+64.	                        if (!visited[neighbor.node] && neighbor.weight < pq.priority(neighbor.node)) {
+65.	                            pq.changePriority(neighbor.node, neighbor.weight);
+66.	                        }
+67.	                    });
+68.	                }
+69.	
+70.	                return mst;
+71.	            }
+72.	        }
+73.	
+74.	        class PriorityQueue {
+75.	            constructor() {
+76.	                this.heap = [];
+77.	            }
+78.	
+79.	            enqueue(data, priority) {
+80.	                const newNode = new Node(data, priority);
+81.	                this.heap.push(newNode);
+82.	                this.bubbleUp();
+83.	            }
+84.	
+85.	            dequeue() {
+86.	                const max = this.heap[0];
+87.	                const end = this.heap.pop();
+88.	                if (this.heap.length > 0) {
+89.	                    this.heap[0] = end;
+90.	                    this.sinkDown();
+91.	                }
+92.	                return max;
+93.	            }
+94.	
+95.	            isEmpty() {
+96.	                return this.heap.length === 0;
+97.	            }
+98.	
+99.	            bubbleUp() {
+100.	                let index = this.heap.length - 1;
+101.	                const node = this.heap[index];
+102.	                while (index > 0) {
+103.	                    const parentIndex = Math.floor((index - 1) / 2);
+104.	                    const parent = this.heap[parentIndex];
+105.	                    if (node.priority >= parent.priority) break;
+106.	                    this.heap[parentIndex] = node;
+107.	                    this.heap[index] = parent;
+108.	                    index = parentIndex;
+109.	                }
+110.	            }
+111.	
+112.	            sinkDown() {
+113.	                let index = 0;
+114.	                const length = this.heap.length;
+115.	                const element = this.heap[0];
+116.	                while (true) {
+117.	                    const leftChildIndex = 2 * index + 1;
+118.	                    const rightChildIndex = 2 * index + 2;
+119.	                    let leftChild, rightChild;
+120.	                    let swap = null;
+121.	
+122.	                    if (leftChildIndex < length) {
+123.	                        leftChild = this.heap[leftChildIndex];
+124.	                        if (leftChild.priority < element.priority) {
+125.	                            swap = leftChildIndex;
+126.	                        }
+127.	                    }
+128.	                    if (rightChildIndex < length) {
+129.	                        rightChild = this.heap[rightChildIndex];
+130.	                        if (
+131.	                            (swap === null && rightChild.priority < element.priority) ||
+132.	                            (swap !== null && rightChild.priority < leftChild.priority)
+133.	                        ) {
+134.	                            swap = rightChildIndex;
+135.	                        }
+136.	                    }
+137.	                    if (swap === null) break;
+138.	                    this.heap[index] = this.heap[swap];
+139.	                    this.heap[swap] = element;
+140.	                    index = swap;
+141.	                }
+142.	            }
+143.	
+144.	            changePriority(data, priority) {
+145.	                for (let i = 0; i < this.heap.length; i++) {
+146.	                    if (this.heap[i].data === data) {
+147.	                        this.heap[i].priority = priority;
+148.	                        this.bubbleUp();
+149.	                        this.sinkDown();
+150.	                        return;
+151.	                    }
+152.	                }
+153.	            }
+154.	
+155.	            priority(data) {
+156.	                for (let i = 0; i < this.heap.length; i++) {
+157.	                    if (this.heap[i].data === data) {
+158.	                        return this.heap[i].priority;
+159.	                    }
+160.	                }
+161.	            }
+162.	        }
+163.	
+164.	        class Node {
+165.	            constructor(data, priority) {
+166.	                this.data = data;
+167.	                this.priority = priority;
+168.	            }
+169.	        }
+170.	
+171.	        // Xử lý sự kiện khi nhấn vào nút "Hiển thị kết quả"
+172.	        document.getElementById('displayMSTBtn').addEventListener('click', function() {
+173.	            const graph = new Graph();
+174.	            const vertices = ['A', 'B', 'C', 'D', 'E'];
+175.	
+176.	            vertices.forEach(vertex => graph.addVertex(vertex));
+177.	
+178.	            graph.addEdge('A', 'B', 2);
+179.	            graph.addEdge('A', 'C', 3);
+180.	            graph.addEdge('B', 'C', 1);
+181.	            graph.addEdge('B', 'D', 1);
+182.	            graph.addEdge('C', 'D', 1);
+183.	            graph.addEdge('C', 'E', 4);
+184.	            graph.addEdge('D', 'E', 2);
+185.	
+186.	            const mst = graph.prim('A');
+187.	            const outputElement = document.getElementById('output');
+188.	            outputElement.innerText = `Cây khung nhỏ nhất: ${mst.join(' -> ')}`;
+189.	        });
+190.	    </script>
+191.	</body>
+192.	</html>

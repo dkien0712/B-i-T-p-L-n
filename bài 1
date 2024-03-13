@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tính số cách chọn bi</title>
+    <script>
+        function tinhSoCachChon() {
+            var soBiDo = parseInt(document.getElementById("soBiDo").value);
+            var soBiXanh = parseInt(document.getElementById("soBiXanh").value);
+            var soBiVang = parseInt(document.getElementById("soBiVang").value);
+ 
+            var ketQua = tinhTongToHop(soBiDo, 1) * tinhTongToHop(soBiXanh, 1) * tinhTongToHop(soBiVang, 1);
+ 
+            document.getElementById("ketQua").innerHTML = "Số cách chọn: " + ketQua;
+        }
+ 
+        function tinhTongToHop(n, k) {
+            var tuSo = 1;
+            var mauSo = 1;
+ 
+            for (var i = n; i > n - k; i--) {
+                tuSo *= i;
+            }
+ 
+            for (var j = 1; j <= k; j++) {
+                mauSo *= j;
+            }
+ 
+            return tuSo / mauSo;
+        }
+    </script>
+</head>
+<body>
+    <h1>Tính số cách chọn bi</h1>
+    <label for="soBiDo">Số bi đỏ:</label>
+    <input type="number" id="soBiDo" min="0" value="6"><br><br>
+ 
+    <label for="soBiXanh">Số bi xanh:</label>
+    <input type="number" id="soBiXanh" min="0" value="4"><br><br>
+ 
+    <label for="soBiVang">Số bi vàng:</label>
+    <input type="number" id="soBiVang" min="0" value="5"><br><br>
+ 
+    <button onclick="tinhSoCachChon()">Tính</button><br><br>
+ 
+    <div id="ketQua"></div>
+</body>
+</html>

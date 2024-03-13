@@ -1,0 +1,33 @@
+!DOCTYPE html>
+<html>
+<head>
+  <title>Liệt kê dãy số</title>
+  <script>
+    function generateSequences(total, n, a) {
+      if (total === 0) {
+        document.getElementById("output").innerHTML += a.join(", ") + "<br>";
+      } else if (total > 0 && n > 0) {
+        for (let i = 1; i <= 10; i++) {
+          a.push(i);
+          generateSequences(total - i, n - 1, a);
+          a.pop();
+        }
+      }
+    }
+
+    function solve() {
+      const totalSum = 10;
+      const sequenceLength = 4;
+      const sequence = [];
+
+      generateSequences(totalSum, sequenceLength, sequence);
+    }
+  </script>
+</head>
+<body>
+  <h1>Liệt kê dãy số tự nhiên có tổng là 10 và không vượt quá 4</h1>
+  <button onclick="solve()">Tìm kiếm</button>
+  <div id="output"></div>
+</body>
+</html>
+
